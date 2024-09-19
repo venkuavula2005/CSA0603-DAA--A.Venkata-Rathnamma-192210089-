@@ -1,0 +1,50 @@
+#include <stdio.h>
+
+int main() {
+    int arr[] = {12, 11, 13, 5, 6, 7};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int width, i, l, m, r, temp, k, left, right;
+
+    // Print initial array
+    printf("Given array:\n");
+    for (i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+
+    // Merge Sort
+    for (width = 1; width < n; width *= 2) {
+        for (i = 0; i < n; i += 2 * width) {
+            l = i;
+            m = i + width - 1;
+            r = i + 2 * width - 1;
+
+            if (m >= n) m = n - 1;
+            if (r >= n) r = n - 1;
+
+            left = l;
+            right = m + 1;
+
+            while (left <= m && right <= r) {
+                if (arr[left] <= arr[right]) {
+                    left++;
+                } else {
+                    temp = arr[right];
+                    for (k = right; k > left; k--)
+                        arr[k] = arr[k - 1];
+                    arr[left] = temp;
+                    left++;
+                    m++;
+                    right++;
+                }
+            }
+        }
+    }
+
+    // Print sorted array
+    printf("\nSorted array:\n");
+    for (i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+
+    return 0;
+}
