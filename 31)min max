@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+#define MAX_SIZE 100  // Maximum size of the list
+
+int main() {
+    int n;  // Number of elements in the list
+    int numbers[MAX_SIZE];  // Array to hold the numbers
+    int min, max;
+
+    // Input the number of elements
+    printf("Enter the number of elements in the list (up to %d): ", MAX_SIZE);
+    scanf("%d", &n);
+
+    // Input the numbers
+    printf("Enter %d numbers:\n", n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &numbers[i]);
+    }
+
+    // Initialize min and max
+    min = max = numbers[0];
+
+    // Find the minimum and maximum values
+    for (int i = 1; i < n; i++) {
+        if (numbers[i] < min) {
+            min = numbers[i];
+        }
+        if (numbers[i] > max) {
+            max = numbers[i];
+        }
+    }
+
+    // Print the results
+    printf("Minimum value: %d\n", min);
+    printf("Maximum value: %d\n", max);
+
+    return 0;
+}
