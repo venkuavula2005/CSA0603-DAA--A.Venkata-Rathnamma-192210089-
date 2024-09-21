@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main() {
+    int n = 5, k = 2; // You can change n and k here
+    int C[n+1][k+1];  // Table to store results of subproblems
+
+    // Initialize all elements of the table
+    for (int i = 0; i <= n; i++) {
+        for (int j = 0; j <= (i < k ? i : k); j++) {
+            // Base case: C(i, 0) = C(i, i) = 1
+            if (j == 0 || j == i) {
+                C[i][j] = 1;
+            } else {
+                // Calculate value using previously stored values
+                C[i][j] = C[i-1][j-1] + C[i-1][j];
+            }
+        }
+    }
+
+    // Output the result
+    printf("C(%d, %d) = %d\n", n, k, C[n][k]);
+
+    return 0;
+}
