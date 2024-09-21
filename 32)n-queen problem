@@ -1,0 +1,31 @@
+#include <stdio.h>
+#define N 4
+
+int main() {
+    int b[N][N] = {0}, col = 0;
+
+    while (col >= 0) {
+        int row;
+        for (row = 0; row < N && !b[row][col]; row++);
+        if (row < N) {
+            int safe = 1;
+            for (int i = 0; i < col; i++)
+                if (b[row][i] || row - col + i >= 0 && b[row - col + i][i] || row + col - i < N && b[row + col - i][i]) {
+                    safe = 0; break;
+                }
+            if (safe) { b[row][col++] = 1; continue; }
+        }
+        if (--col < 0) break;
+        for (row = 0; !b[row][col]; row++);
+        b[row][col] = 0;
+        if (col == N) {
+            for (int i = 0; i < N; i++) {
+                for (int j = 0; j < N; j++) printf("%d ", b[i][j]);
+                printf("\n");
+            }
+            printf("\n");
+            col--;
+        }
+    }
+    return 0;
+}
