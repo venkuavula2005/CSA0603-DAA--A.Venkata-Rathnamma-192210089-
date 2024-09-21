@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define N 4  // Number of cities
+#define INF INT_MAX
+
+int main() {
+    int dist[N][N] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+
+    int dp[N][1 << N] = {0};  // DP table
+    for (int i = 0; i < N; i++) for (int j = 0; j < (1 << N); j++) dp[i][j] = -1;
+
+    dp[0][1] = 0;  // Start at city 0
+
+    for (int mask = 1; mask < (1 << N); mask++) {
+        for (int pos = 0; pos < N; pos++) {
+            if (!(mask & (1 << pos))) continue;  // City not visited
+            for (int city = 0; city < N; city++) {
+                if (mask & (1 << city)) continue;  // City already visited
+                int newMask = mask | (1 << city);
+                int newCost = dp[pos][mask] + dist[pos][city];
+                if (dp[city][newMask] == -1 || newCost < dp[city][newMask]) {
+                    dp[city][newMask] = newCost;
+                }
+            }
+        }
+    }
+
+    int result = INF;
+    for (int pos = 1; pos < N; pos++) {
+        if (dp[pos][(1 << N) - 1] != -1) {
+            result = dp[pos][(1 << N) - 1] + dist[pos][0];
+        }
+    }
+
+    printf("The minimum cost of the travelling salesman tour is: %d\n", result);
+    return 0;
+}
