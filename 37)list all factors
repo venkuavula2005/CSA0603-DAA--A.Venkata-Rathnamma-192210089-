@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+    int n, i;
+
+    // Input the number n
+    printf("Enter a number: ");
+    scanf("%d", &n);
+
+    // Iterate from 1 to n to find all factors
+    printf("Factors of %d are: ", n);
+    for (i = 1; i <= n; i++) {
+        if (n % i == 0) {  // If i divides n completely, it's a factor
+            printf("%d ", i);
+        }
+    }
+
+    printf("\n");
+    return 0;
+}
