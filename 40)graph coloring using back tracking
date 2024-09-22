@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdbool.h>
+
+#define V 5 // Number of vertices in the graph
+
+int main() {
+    // Simple adjacency matrix for the graph
+    int graph[V][V] = {
+        {0, 1, 0, 1, 0},
+        {1, 0, 1, 0, 1},
+        {0, 1, 0, 1, 1},
+        {1, 0, 1, 0, 1},
+        {0, 1, 1, 1, 0}
+    };
+
+    int path[V]; // To store the Hamiltonian path
+    bool visited[V] = {false}; // To keep track of visited vertices
+
+    // Start at the first vertex
+    path[0] = 0; 
+    visited[0] = true; 
+
+    int pos = 1; // Position in the path
+
+    // Backtracking to find the Hamiltonian circuit
+    while (true) {
+        if (pos == V) { // All vertices are included
+            // Check if there is an edge from the last vertex to the first
+            if (graph[path[pos - 1]][path[0]] == 1) {
+                // Print the Hamiltonian circuit
+                printf("Hamiltonian Circuit: ");
+                for (int i = 0; i < V; i++) {
+                    printf("%d ", path[i]);
+                }
+                printf("%d\n", path[0]); // Complete the circuit
+                return 0;
+            } else {
+                // Backtrack
+                pos--;
+                if (pos < 0) break; // Exit if backtracking to the start
+                visited[path[pos]] = false; // Unmark last visited
+                continue;
+            }
+        }
+
+        bool found = false;
+        for (int v = 1; v < V; v++) {
+            // Check if the vertex can be added to the path
+            if (!visited[v] && graph[path[pos - 1]][v] == 1) {
+                path[pos] = v; // Add vertex to the path
+                visited[v] = true; // Mark vertex as visited
+                pos++; // Move to the next position
+                found = true; // Found a valid vertex
+                break;
+            }
+        }
+
+        // If no vertex can be added, backtrack
+        if (!found) {
+            pos--; // Go to the previous position
+            if (pos < 0) break; // Exit if backtracking to the start
+            visited[path[pos]] = false; // Unmark last visited
+        }
+    }
+
+    printf("Solution does not exist\n");
+    return 0;
+}
