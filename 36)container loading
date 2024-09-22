@@ -1,0 +1,41 @@
+#include <stdio.h>
+
+int main() {
+    int n, capacity, i, w;
+
+    // Input the number of items and the container capacity
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
+
+    printf("Enter the capacity of the container: ");
+    scanf("%d", &capacity);
+
+    int weight[n], value[n], dp[n + 1][capacity + 1];
+
+    // Input the weights and values of the items
+    printf("Enter the weight and value of each item:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%d %d", &weight[i], &value[i]);
+    }
+
+    // Build the DP table iteratively (without any functions)
+    for (i = 0; i <= n; i++) {
+        for (w = 0; w <= capacity; w++) {
+            if (i == 0 || w == 0) {
+                dp[i][w] = 0; // Base case: no items or no capacity
+            } else if (weight[i - 1] <= w) {
+                // Max of including or excluding the current item
+                int include = value[i - 1] + dp[i - 1][w - weight[i - 1]];
+                int exclude = dp[i - 1][w];
+                dp[i][w] = (include > exclude) ? include : exclude;
+            } else {
+                dp[i][w] = dp[i - 1][w]; // Exclude the item if it can't fit
+            }
+        }
+    }
+
+    // Output the maximum value that can be stored in the container
+    printf("Maximum value in container = %d\n", dp[n][capacity]);
+
+    return 0;
+}
