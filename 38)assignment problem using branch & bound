@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <limits.h>
+
+#define N 4 // Size of the cost matrix (number of agents and tasks)
+
+int main() {
+    // Example cost matrix (4x4)
+    int cost[N][N] = {
+        {9, 2, 7, 8},
+        {6, 4, 3, 7},
+        {5, 8, 1, 8},
+        {7, 6, 9, 4}
+    };
+
+    int visited[N] = {0}; // To keep track of assigned tasks
+    int minCost = INT_MAX; // Variable to store the minimum cost
+    int level = 0, currentCost = 0, newCost = 0;
+    int i, j, k;
+
+    // Helper variables for tracking cost estimations
+    int row, min, totalCost;
+
+    // Branch and Bound logic directly without function calls
+    // We will use a stack-like approach to handle recursion without functions
+
+    // Use a loop to simulate recursive calls for different levels (agents)
+    while (1) {
+        // If all tasks are assigned, check if this is the minimum cost
+        if (level == N) {
+            if (currentCost < minCost) {
+                minCost = currentCost;
+            }
+            level--; // Backtrack
+            continue;
+        }
+
+        int isTaskAssigned = 0; // To check if any task is assigned in this level
+
+        // Try to assign each task to the current agent (level)
+        for (i = 0; i < N; i++) {
+            if (!visited[i]) { // If the task i is not yet assigned
+                visited[i] = 1; // Mark task i as assigned
+
+                // Calculate the cost of assigning task i to agent `level`
+                newCost = currentCost + cost[level][i];
+
+                // Calculate estimated cost for the remaining tasks (bounding)
+                totalCost = 0;
+                for (row = level + 1; row < N; row++) {
+                    min = INT_MAX;
+                    for (k = 0; k < N; k++) {
+                        if (!visited[k]) { // Only consider unassigned tasks
+                            if (cost[row][k] < min) {
+                                min = cost[row][k]; // Find minimum cost for this row
+                            }
+                        }
+                    }
+                    totalCost += min;
+                }
+
+                newCost += totalCost; // Add bounding cost estimation
+
+                // Perform branch and bound if the new cost is better than the current minimum cost
+                if (newCost < minCost) {
+                    currentCost += cost[level][i]; // Assign task to current agent
+                    level++; // Move to the next agent (simulate recursion)
+                    isTaskAssigned = 1;
+                    break; // Move to the next level (agent)
+                }
+
+                visited[i] = 0; // Backtrack and mark the task as unassigned
+            }
+        }
+
+        // If no task was assigned, backtrack to the previous agent (level)
+        if (!isTaskAssigned) {
+            if (level == 0) {
+                // If backtracking from level 0, all possibilities are explored
+                break;
+            }
+            level--; // Go to the previous level (agent)
+            currentCost -= cost[level][i]; // Undo the cost of the previous assignment
+            visited[i] = 0; // Mark the last task as unassigned
+        }
+    }
+
+    // Output the minimum cost of assignment
+    printf("The minimum cost of assignment is: %d\n", minCost);
+
+    return 0;
+}
