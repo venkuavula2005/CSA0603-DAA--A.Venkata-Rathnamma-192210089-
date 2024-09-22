@@ -1,0 +1,29 @@
+#include <stdio.h>
+
+int main() {
+    int arr[100], n, num, i, pos;
+
+    // Input number of elements and the sorted array
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter %d sorted elements: \n", n);
+    for (i = 0; i < n; i++) scanf("%d", &arr[i]);
+
+    // Input the number to insert
+    printf("Enter the number to insert: ");
+    scanf("%d", &num);
+
+    // Find the insertion position
+    for (pos = 0; pos < n && arr[pos] < num; pos++);
+
+    // Shift elements and insert the number
+    for (i = n; i > pos; i--) arr[i] = arr[i - 1];
+    arr[pos] = num;
+    
+    // Output the updated array
+    printf("Array after insertion: ");
+    for (i = 0; i <= n; i++) printf("%d ", arr[i]);
+
+    return 0;
+}
